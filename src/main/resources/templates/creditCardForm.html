@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<!--suppress ALL -->
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="bindingResult" type="org.springframework.validation.BindingResult"*/-->
+<!--/*@thymesVar id="customer" type="com.theironyard.entity.Customer"*/-->
+<head>
+    <title th:text="#{purchase.title}">Give Us Your Money</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" href="../static/css/styles.css" />
+</head>
+
+<body>
+
+<h1 th:text="#{purchase.header}">Purchase our stuff!</h1>
+
+<!--/* This is a Thymeleaf comment. It's removed when the template is processed */-->
+
+<!--/* th:action sets the action for the form. It makes the form do some magic stuff. */-->
+<!--/* th:object binds the form to a specific object from the model */-->
+<form action="#" th:action="@{/purchase}" th:object="${customer}"  method="post">
+    <h1 style="color: green" th:if="${#fields.hasErrors()}">Your form has errors!</h1>
+
+    <h2 th:text="#{purchase.yourDetails}">Your details</h2>
+
+    <div>
+        <!--/*
+            This ul contains errors, if any.
+            th:each iterates over the each error for the specified field, if any.
+            th:text sets the ext of the error li.
+            No errors = no li tags
+        */-->
+        <ul class="error"><li th:each="err : ${#fields.errors('firstName')}" th:text="${err}" /></ul>
+        <label>First Name</label>
+        <!--/*
+            th:field binds the field to the specified field of the object bound
+            using th:object in the form tag above.
+            th:errorclass sets a css class to use when this field has any errors
+        */-->
+        <input type="text" th:field="*{firstName}" th:errorclass="error" />
+    </div>
+
+    <div>
+        <ul class="error"><li th:each="err : ${#fields.errors('lastName')}" th:text="${err}" /></ul>
+        <label>Last Name</label>
+        <input type="text" th:field="*{lastName}" th:errorclass="error" />
+    </div>
+
+    <div>
+        <ul class="error"><li th:each="err : ${#fields.errors('email')}" th:text="${err}" /></ul>
+        <label>Email</label>
+        <input type="text" th:field="*{email}" th:errorclass="error" />
+    </div>
+
+    <h2>Shipping address</h2>
+
+    <div>
+         <ul class="error">
+            <!--/*
+                There are two sets of possible errors shown here, one for each
+                line in the address.
+                Note that the field name is more complex. This is because
+                addresses are stored in a hashmap named addresses in customer.
+                'Shipping' is the key for this address in addresses.
+            */-->
+            <li th:each="err : ${#fields.errors('addresses[shipping].line1')}" th:text="${err}" />
+            <li th:each="err : ${#fields.errors('addresses[shipping].line2')}" th:text="${err}" />
+        </ul>
+        <label>Address</label>
+        <div class="addressLines">
+            <input type="text" th:field="*{addresses[shipping].line1}" th:errorclass="error" /><br />
+            <input type="text" th:field="*{addresses[shipping].line2}" th:errorclass="error" />
+        </div>
+    </div>
+
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('addresses[shipping].city')}" th:text="${err}" /></ul>
+        <label>City</label>
+        <input type="text" th:field="*{addresses[shipping].city}" th:errorclass="error" />
+    </div>
+
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('addresses[shipping].state')}" th:text="${err}" /></ul>
+        <label>State</label>
+        <select th:field="*{addresses[shipping].state}" th:errorclass="error">
+            <!--/*
+                Here I'm faking a list of states. In the real world this would
+                probably come from the model. The first option is blank to allow
+                the user to make their own selection.
+                th:value must be provided for all option tags in select tags with
+                a th:field attribute specified.
+            */-->
+            <option th:value="${''}"></option>
+            <option th:value="MS">Mississippi</option>
+            <option th:value="NC">North Carolina</option>
+        </select>
+    </div>
+
+    <div>
+        <ul class="error"><li th:each="err : ${#fields.errors('addresses[shipping].postalCode')}" th:text="${err}" /></ul>
+        <label>Postal Code</label>
+        <input type="text" th:field="*{addresses[shipping].postalCode}" th:errorclass="error" />
+    </div>
+
+    <h2>Billing address</h2>
+
+    <div>
+        <ul class="error">
+            <li th:each="err : ${#fields.errors('addresses[billing].line1')}" th:text="${err}" />
+            <li th:each="err : ${#fields.errors('addresses[billing].line2')}" th:text="${err}" />
+        </ul>
+        <label>Address</label>
+        <div class="addressLines">
+            <input type="text" th:field="*{addresses[billing].line1}" th:errorclass="error" /><br />
+            <input type="text" th:field="*{addresses[billing].line2}" th:errorclass="error" />
+        </div>
+    </div>
+
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('addresses[billing].city')}" th:text="${err}" /></ul>
+        <label>City</label>
+        <input type="text" th:field="*{addresses[billing].city}" th:errorclass="error" />
+    </div>
+
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('addresses[billing].state')}" th:text="${err}" /></ul>
+        <label>State</label>
+        <select th:field="*{addresses[billing].state}" th:errorclass="error">
+            <option th:value="${''}"></option>
+            <option th:value="MS">Mississippi</option>
+            <option th:value="NC">North Carolina</option>
+        </select>
+    </div>
+
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('addresses[billing].postalCode')}" th:text="${err}" /></ul>
+        <label>Postal Code</label>
+        <input type="text" th:field="*{addresses[billing].postalCode}" th:errorclass="error" />
+    </div>
+
+   <h2>Credit Card</h2>
+
+   <div>
+        <ul class="error"><li th:each="err : ${#fields.errors('creditCard.number')}" th:text="${err}" /></ul>
+       <label>Card Number</label>
+       <input type="text" inputmode="numeric" th:field="*{creditCard.number}" th:errorclass="error"  />
+   </div>
+
+    <div>
+         <ul class="error">
+            <li th:each="err : ${#fields.errors('creditCard.expirationMonth')}" th:text="${err}" />
+            <li th:each="err : ${#fields.errors('creditCard.expirationYear')}" th:text="${err}" />
+        </ul>
+        <label>Expiration Date</label>
+        <input type="text" inputmode="numeric" th:field="*{creditCard.expirationMonth}" th:errorclass="error" id="expirationMonth" placeholder="MM" /> /
+        <input type="text" inputmode="numeric" th:field="*{creditCard.expirationYear}" th:errorclass="error" id="expirationYear" placeholder="YYYY" />
+    </div>
+    <div>
+         <ul class="error"><li th:each="err : ${#fields.errors('creditCard.cvv')}" th:text="${err}" /></ul>
+        <label>CVV</label>
+        <input type="text" inputmode="numeric" th:field="*{creditCard.cvv}" th:errorclass="error" />
+    </div>
+
+    <button>Purchase!</button>
+</form>
+
+</body>
+
+
+</html>
